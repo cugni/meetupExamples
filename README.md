@@ -4,7 +4,7 @@ This repository contains examples shown  the 8th of April 2015 at the Barcelona 
 Happy hacking!
 
 ##Build for running on a Spark cluster
-1. Build the spark-cassandra-connector assembly. If we run the code on a Saprk cluster, we will need it. 
+1. Build the spark-cassandra-connector assembly. If we run the code on a Spark cluster, we will need it. 
 
    ```
    git clone git@github.com:datastax/spark-cassandra-connector.git
@@ -15,7 +15,7 @@ Happy hacking!
    // generates the assembly of the driver in
    //
    ```
-2. Package the our code. We will have to load it too
+2. Package our code. We will have to load it too
    ```
    cd ../meetupExamples/
    sbt package
