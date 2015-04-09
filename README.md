@@ -3,8 +3,8 @@ This repository contains examples shown  the 8th of April 2015 at the Barcelona 
 
 Happy hacking!
 
-##Build to run on a cluster
-1. First, we need  build the spark-cassandra-connector assembly. If we run the code on a Saprk cluster, we will need it. 
+##Build for running on a Spark cluster
+1. Build the spark-cassandra-connector assembly. If we run the code on a Saprk cluster, we will need it. 
 
    ```
    git clone git@github.com:datastax/spark-cassandra-connector.git
@@ -15,13 +15,14 @@ Happy hacking!
    // generates the assembly of the driver in
    //
    ```
-2. Package the our code
+2. Package the our code. We will have to load it too
    ```
    cd ../meetupExamples/
    sbt package
    ```
-3. Run the worksheets
-   You can decide to run the code from a REPL console
+   
+##Run the code
+We created a worksheet with some example. You can decide to run it from a REPL console: 
 
    ```
    sbt console
@@ -32,10 +33,11 @@ Happy hacking!
    bin/spark-shell --jars ../connector.jar,../exampleCode.jar
 
    ```
-4. Play with the code!
-   Open worksheet.sc and QuadTree.scala, look to the code, play with the parameters. You can change the logging levels
-   in    src/main/resources/log4j.properties to better understand what is going on. Set it to INFO at the beginning. 
+##Play with the code!
+   Open *worksheet.sc* and *QuadTree.scala*, look to the code, play with the parameters. 
+   You can change the logging levels in *src/main/resources/log4j.properties* to better understanding what is going on. (Set it to INFO at the beginning.)
    
-5. Improve this demo: when you find a error, clone, fish and push!
+##Improve this demo
+when you find an error, *clone* the repo, *fix* it and *push*!
   
 
