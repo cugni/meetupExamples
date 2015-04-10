@@ -221,9 +221,9 @@ object CubeFactory extends Serializable {
 
   def createSon(father:String,p:Particle):String={
     val mul = 1 << father.length+1
-    val xr = (p.x.toDouble * mul).toLong
-    val yr = (p.y.toDouble * mul).toLong
-    val zr = (p.z.toDouble * mul).toLong
+    val xr = (p.x * mul).toLong
+    val yr = (p.y * mul).toLong
+    val zr = (p.z * mul).toLong
     father + ((xr & 1) |((yr & 1)  << 1) | ((zr&1) << 2)).toByte
 
   }
