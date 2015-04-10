@@ -38,6 +38,9 @@ CassandraConnector(conf).withSessionDo { session =>
   session.execute("CREATE KEYSPACE IF NOT EXISTS testcase WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 }")
   session.execute("CREATE TABLE IF NOT EXISTS testcase.particles (id int PRIMARY KEY, x float,y float,z float)")
   session.execute("CREATE TABLE IF NOT EXISTS testcase.quad_index (cube text,id int , x float,y float,z float, PRIMARY KEY(cube,id))")
+  session.execute("TRUNCATE testcase.particles") //let's start with empty tables
+  session.execute("TRUNCATE testcase.quad_index")
+
 }
 
 
@@ -93,13 +96,13 @@ println("last but not least, we save the index")
 
 index3.map{
   case (cube,Particle(id,x,y,z))=>(cube,id,x,y,z) //sometime you have to do by hand
-}
-  .saveToCassandra("testcase","quad_index",SomeColumns("cube","id", "x","y","z"))
+
+}.saveToCassandra("testcase","quad_index",SomeColumns("cube","id", "x","y","z"))
 
 
 println("Some statistics on the indexes")
 println("levels in the tree")
-index3.map{ case (cube,_)=>cube.length}.stats()
+val cubeLengths=index3.map{ case (cube,_)=>cube.length}.stats()
 println("elements for cube")
-index3.map{case (cube,_)=>(cube,1)}.reduceByKey(_+_).map(_._2).stats()
+val cubeSizes=index3.map{case (cube,_)=>(cube,1)}.reduceByKey(_+_).map(_._2).stats()
 
