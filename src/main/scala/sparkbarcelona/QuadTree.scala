@@ -7,7 +7,7 @@ import org.apache.spark.rdd.RDD
 
  import scala.util.Random
 
-case class Particle(id:Int,x:Float,y:Float,z:Float)
+case class Particle(id:Int,x:Double,y:Double,z:Double)
 
 
 object QuadTree {
@@ -29,10 +29,18 @@ object QuadTree {
     sc.parallelize(0 until root)
       .flatMap(id=>
       (0 to root).map(off=>Particle(id*root+off,
-        // We use Gaussian distribution because it's easy: actual data is not so nicely distributed
-        Random.nextGaussian().toFloat,
-        Random.nextGaussian().toFloat,
-        Random.nextGaussian().toFloat)
+        /**  We use Gaussian distribution to simulate real data with its skewness.
+          *
+          *  The bit operations works only with values between 0.0 and 1.0, so we have to
+          *  bound our points to this interval.
+          *  Random.nextGaussian() returns values distributed with a mean of 0.0 and standard
+          *  deviation of 1.0. To normalize the data considering an interval which contains the
+          *  99.9999426697% of the data using n=5.
+          *  (http://en.wikipedia.org/wiki/Normal_distribution#Standard_deviation_and_tolerance_intervals)
+         */
+        (Random.nextGaussian()+5)/10,
+        (Random.nextGaussian()+5)/10,
+        (Random.nextGaussian()+5)/10)
       ))
   }
 
@@ -149,6 +157,13 @@ object QuadTree {
       }else {
         val counted = toBeSplit.join(recurrence)
 
+        val fullCubes = counted.filter {
+          case ((cube, (particle, count))) => count > maxNodeSize
+        } map {
+          //I've to split the cube again, because it has more elements than the maximum allowed.
+          case (cube, (particle, _)) => (CubeFactory.createSon(cube, particle), particle)
+        }
+
         //If the cube is not full, we try to fill the father
         val toBeReducedAgain = counted.filter {
           case ((cube, (particle, count))) => count <= maxNodeSize
@@ -156,17 +171,11 @@ object QuadTree {
           case ((cube, (particle, count))) => (cube.substring(0,cube.length-1), particle)
         }
 
-        val fullCubes = counted.filter {
-          case ((cube, (particle, count))) => count > maxNodeSize
-        } map {
-          //I've to split the cube again, because it has more elements than the maximum allowed.
-          case (cube, (particle, _)) => (CubeFactory.createSon(cube, particle), particle)
-        }
          /**
          * Here we can reuse the previously aggregated data for preparing  recurrences of cubes for the next iteration.
          */
         val rec=recurrence.map {
-          case (cube, rec) => (cube.substring(0,cube.length-1), rec)
+          case (cube, numberOfElements) => (cube.substring(0,cube.length-1), numberOfElements)
         }.reduceByKey(_ + _)
 
         //let's  do another iteration
@@ -195,12 +204,12 @@ object CubeFactory extends Serializable {
   def cube(point: Particle, times: Int): String =
     cube(point.x, point.y, point.z, times)
 
-  def cube(x: Float, y: Float, z: Float, times: Int): String = {
+  def cube(x: Double, y: Double, z: Double, times: Int): String = {
     val mul = 1 << times
-    val xr = (x.toDouble * mul).toLong
-    val yr = (y.toDouble * mul).toLong
-    val zr = (z.toDouble * mul).toLong
-    (times.toLong - 1).to(0L, -1L).map(t => {
+    val xr = (x * mul).toLong
+    val yr = (y * mul).toLong
+    val zr = (z * mul).toLong
+    (times- 1).to(0, -1).map(t => {
       val mask = 1 << t
       (((xr & mask) >> t) |
         ((yr & mask) >> t) << 1 |
