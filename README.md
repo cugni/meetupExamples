@@ -40,4 +40,10 @@ We created a worksheet with some examples. You can decide to run it from a REPL 
 ##Improve this demo
 when you find an error, *clone* the repo, *fix* it and *push*!
   
+##Some references
 
+Some useful resources: 
+
+- [Tour of Scala](http://docs.scala-lang.org/tutorials/tour/tour-of-scala.html)
+- [Scala CheatSheet](https://github.com/lampepfl/progfun-wiki/blob/gh-pages/CheatSheet.md)
+- [Scala School by Twitter](http://twitter.github.io/scala_school/)
