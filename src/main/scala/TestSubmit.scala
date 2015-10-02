@@ -26,7 +26,7 @@ object TestSubmit extends App {
 
 
   println("Generating a random data set")
-  val sourceSize = 100000
+  val sourceSize = Integer.getInteger("sourceSize",100000)
   val randomOrigin = QuadTree.generateData(sourceSize)
 
   println("Note that every time  you call it, the results are different.")
