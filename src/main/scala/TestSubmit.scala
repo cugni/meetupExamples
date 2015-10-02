@@ -25,7 +25,10 @@ object TestSubmit extends App {
   }
 
 
-  val sourceSize = Integer.getInteger(  "sourceSize",100000)
+  val sourceSize:Int = args.toList match {
+    case s::_ => s.toInt
+    case  _=>100000
+   }
   println(s"Generating a random data set of size $sourceSize")
   val randomOrigin = QuadTree.generateData(sourceSize)
 
