@@ -36,7 +36,7 @@ object TestSubmit extends App {
   randomOrigin.saveToCassandra("testcase", "particles", SomeColumns("id", "x", "y", "z"))
   val source = sc.cassandraTable[Particle]("testcase", "particles").select("id", "x", "y", "z")
   source.count()
-  val estimatedMaxLevel=(Math.log(sourceSize)/Math.log(8)+1).toInt
+  val estimatedMaxLevel=(Math.log(sourceSize.toDouble)/Math.log(8)+1).toInt
 
   val s3 = System.currentTimeMillis()
   val index3 = QuadTree.bottomUp(source, maxNodeSize = 1000, estimatedMaxLevel) //max level to 16.. very pessimist
