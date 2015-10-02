@@ -18,10 +18,10 @@ lazy val meetupExamples = (project in file(".")).
     scalaVersion := "2.10.4",
     scalacOptions ++= Seq("-deprecation", "-feature"),
     libraryDependencies += "org.specs2" %% "specs2" % "2.2"  ,
-    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.1.0"  ,
-    libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.1.0"  ,
+    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.4.1"  ,
+    libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.4.1"  ,
     // the assembly of the connector better to add separately.
-    libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.1.1" ,
+    libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "1.4.0" ,
     libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-core" % "2.1.5",
     // Dependencies for logging
    // libraryDependencies ++= logging,
